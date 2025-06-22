@@ -88,7 +88,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Previous Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-muted rounded">←</kbd> <kbd className="px-1 py-0.5 text-xs bg-muted rounded">A</kbd></p>
+                  <p>Previous Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-white/20 text-white rounded">←</kbd> <kbd className="px-1 py-0.5 text-xs bg-white/20 text-white rounded">A</kbd></p>
                 </TooltipContent>
               </Tooltip>
 
@@ -105,7 +105,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{isPlaying ? 'Pause Animation' : 'Play Animation'} <kbd className="ml-2 px-1 py-0.5 text-xs bg-muted rounded">Space</kbd></p>
+                  <p>{isPlaying ? 'Pause Animation' : 'Play Animation'} <kbd className="ml-2 px-1 py-0.5 text-xs bg-white/20 text-white rounded">Space</kbd></p>
                 </TooltipContent>
               </Tooltip>
 
@@ -122,7 +122,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Next Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-muted rounded">→</kbd> <kbd className="px-1 py-0.5 text-xs bg-muted rounded">D</kbd></p>
+                  <p>Next Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-white/20 text-white rounded">→</kbd> <kbd className="px-1 py-0.5 text-xs bg-white/20 text-white rounded">D</kbd></p>
                 </TooltipContent>
               </Tooltip>
 
@@ -142,7 +142,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Add New Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-muted rounded">Ctrl+N</kbd></p>
+                  <p>Add New Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-white/20 text-white rounded">Ctrl+N</kbd></p>
                 </TooltipContent>
               </Tooltip>
 
@@ -159,7 +159,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Delete Current Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-muted rounded">Del</kbd></p>
+                  <p>Delete Current Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-white/20 text-white rounded">Del</kbd></p>
                 </TooltipContent>
               </Tooltip>
 

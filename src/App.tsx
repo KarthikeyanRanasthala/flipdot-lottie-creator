@@ -248,7 +248,7 @@ function App() {
     handleNextFrame();
   }, { enableOnFormTags: false });
 
-  useHotkeys('?', (e) => {
+  useHotkeys('shift+/', (e) => {
     e.preventDefault();
     setShowKeyboardShortcuts(true);
   }, { enableOnFormTags: false });
