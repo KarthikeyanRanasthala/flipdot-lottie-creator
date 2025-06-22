@@ -2,6 +2,8 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { FramePreview } from '@/components/FramePreview';
 import { 
   Play, 
   Pause, 
@@ -10,27 +12,36 @@ import {
   Plus, 
   Trash2 
 } from 'lucide-react';
+import { AnimationFrame, GridDimensions, ColorSettings } from '@/types';
 
 interface PlayerControlsProps {
   isPlaying: boolean;
   currentFrame: number;
   totalFrames: number;
+  frames: AnimationFrame[];
+  dimensions: GridDimensions;
+  colors: ColorSettings;
   onPlayPause: () => void;
   onPreviousFrame: () => void;
   onNextFrame: () => void;
   onNewFrame: () => void;
   onClearFrame: () => void;
+  onFrameSelect: (frameIndex: number) => void;
 }
 
 export const PlayerControls: React.FC<PlayerControlsProps> = ({
   isPlaying,
   currentFrame,
   totalFrames,
+  frames,
+  dimensions,
+  colors,
   onPlayPause,
   onPreviousFrame,
   onNextFrame,
   onNewFrame,
-  onClearFrame
+  onClearFrame,
+  onFrameSelect
 }) => {
   return (
     <Card className="mt-6">
@@ -88,6 +99,35 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
             </Button>
           </div>
         </div>
+
+        {/* Frame Previews */}
+        {frames.length > 0 && (
+          <div className="border-t pt-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-medium text-muted-foreground">Frame Previews</h3>
+              <Badge variant="secondary" className="text-xs">
+                {frames.length} frame{frames.length !== 1 ? 's' : ''}
+              </Badge>
+            </div>
+            <ScrollArea className="w-full">
+              <div className="flex gap-3 pb-2">
+                {frames.map((frame, index) => (
+                  <FramePreview
+                    key={frame.id}
+                    dots={frame.dots}
+                    dimensions={dimensions}
+                    colors={colors}
+                    isSelected={index === currentFrame}
+                    isPlaying={isPlaying}
+                    frameNumber={index + 1}
+                    onClick={() => onFrameSelect(index)}
+                    className="flex-shrink-0"
+                  />
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

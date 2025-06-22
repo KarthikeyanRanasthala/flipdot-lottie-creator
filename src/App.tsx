@@ -133,6 +133,11 @@ function App() {
     setFrames(newFrames);
   }, [frames, currentFrameIndex, settings.gridDimensions]);
 
+  const handleFrameSelect = useCallback((frameIndex: number) => {
+    setCurrentFrameIndex(frameIndex);
+    setIsPlaying(false);
+  }, []);
+
   const handleSettingsChange = useCallback((newSettings: AppSettings) => {
     setSettings(newSettings);
   }, [setSettings]);
@@ -164,11 +169,15 @@ function App() {
               isPlaying={isPlaying}
               currentFrame={currentFrameIndex}
               totalFrames={frames.length}
+              frames={frames}
+              dimensions={settings.gridDimensions}
+              colors={settings.colors}
               onPlayPause={handlePlayPause}
               onPreviousFrame={handlePreviousFrame}
               onNextFrame={handleNextFrame}
               onNewFrame={handleNewFrame}
               onClearFrame={handleClearFrame}
+              onFrameSelect={handleFrameSelect}
             />
           </div>
 
