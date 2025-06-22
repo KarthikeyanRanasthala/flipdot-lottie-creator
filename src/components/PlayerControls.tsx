@@ -87,8 +87,8 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                     <SkipBack className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent className="bg-black text-white border-gray-600">
-                  <p>Previous Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-800 text-white rounded">←</kbd></p>
+                <TooltipContent className="bg-white text-black border-gray-300">
+                  <p>Previous Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-200 text-black rounded">←</kbd></p>
                 </TooltipContent>
               </Tooltip>
 
@@ -104,8 +104,8 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                     {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent className="bg-black text-white border-gray-600">
-                  <p>{isPlaying ? 'Pause Animation' : 'Play Animation'} <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-800 text-white rounded">Space</kbd></p>
+                <TooltipContent className="bg-white text-black border-gray-300">
+                  <p>{isPlaying ? 'Pause Animation' : 'Play Animation'} <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-200 text-black rounded">Space</kbd></p>
                 </TooltipContent>
               </Tooltip>
 
@@ -121,8 +121,8 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                     <SkipForward className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent className="bg-black text-white border-gray-600">
-                  <p>Next Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-800 text-white rounded">→</kbd></p>
+                <TooltipContent className="bg-white text-black border-gray-300">
+                  <p>Next Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-200 text-black rounded">→</kbd></p>
                 </TooltipContent>
               </Tooltip>
 
@@ -141,8 +141,8 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                     <Plus className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent className="bg-black text-white border-gray-600">
-                  <p>Add New Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-800 text-white rounded">Ctrl+N</kbd></p>
+                <TooltipContent className="bg-white text-black border-gray-300">
+                  <p>Add New Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-200 text-black rounded">Ctrl+N</kbd></p>
                 </TooltipContent>
               </Tooltip>
 
@@ -158,8 +158,8 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                     <X className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent className="bg-black text-white border-gray-600">
-                  <p>Delete Current Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-800 text-white rounded">Del</kbd></p>
+                <TooltipContent className="bg-white text-black border-gray-300">
+                  <p>Delete Current Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-200 text-black rounded">Del</kbd></p>
                 </TooltipContent>
               </Tooltip>
 
@@ -175,7 +175,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                     <Eraser className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent className="bg-black text-white border-gray-600">
+                <TooltipContent className="bg-white text-black border-gray-300">
                   <p>Clear Current Frame</p>
                 </TooltipContent>
               </Tooltip>
@@ -196,7 +196,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent className="bg-black text-white border-gray-600">
+                <TooltipContent className="bg-white text-black border-gray-300">
                   <p>Move Frame Left</p>
                 </TooltipContent>
               </Tooltip>
@@ -213,7 +213,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent className="bg-black text-white border-gray-600">
+                <TooltipContent className="bg-white text-black border-gray-300">
                   <p>Move Frame Right</p>
                 </TooltipContent>
               </Tooltip>
@@ -240,7 +240,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                     </Button>
                   </div>
                 </TooltipTrigger>
-                <TooltipContent className="bg-black text-white border-gray-600">
+                <TooltipContent className="bg-white text-black border-gray-300">
                   <p>Export animation as Lottie JSON file</p>
                 </TooltipContent>
               </Tooltip>
