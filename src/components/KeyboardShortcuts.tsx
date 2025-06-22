@@ -37,7 +37,7 @@ const shortcutGroups: ShortcutGroup[] = [
     title: "General",
     shortcuts: [
       { keys: ["Escape"], description: "Stop playback / Close dialogs" },
-      { keys: ["Ctrl", "Shift", "?"], description: "Show keyboard shortcuts" },
+      { keys: ["?"], description: "Show keyboard shortcuts" },
     ]
   }
 ];

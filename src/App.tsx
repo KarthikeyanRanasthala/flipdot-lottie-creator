@@ -248,7 +248,7 @@ function App() {
     handleNextFrame();
   }, { enableOnFormTags: false });
 
-  useHotkeys('ctrl+shift+?, cmd+shift+?', (e) => {
+  useHotkeys('?', (e) => {
     e.preventDefault();
     setShowKeyboardShortcuts(true);
   }, { enableOnFormTags: false });
