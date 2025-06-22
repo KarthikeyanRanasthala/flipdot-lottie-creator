@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { FramePreview } from '@/components/FramePreview';
 import { 
@@ -47,11 +46,6 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     <Card className="mt-6">
       <CardContent className="p-4">
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-sm">
-              Frame {currentFrame + 1} of {totalFrames}
-            </Badge>
-          </div>
           <div className="flex items-center gap-1">
             <Button
               variant="outline"
@@ -103,12 +97,6 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
         {/* Frame Previews */}
         {frames.length > 0 && (
           <div className="border-t pt-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-medium text-muted-foreground">Frame Previews</h3>
-              <Badge variant="secondary" className="text-xs">
-                {frames.length} frame{frames.length !== 1 ? 's' : ''}
-              </Badge>
-            </div>
             <ScrollArea className="w-full">
               <div className="flex gap-3 pb-2">
                 {frames.map((frame, index) => (

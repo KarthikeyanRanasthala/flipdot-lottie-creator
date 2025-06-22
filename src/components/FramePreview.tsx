@@ -47,7 +47,7 @@ export const FramePreview: React.FC<FramePreviewProps> = ({
       <button
         onClick={onClick}
         className={cn(
-          "relative rounded-lg border-2 transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400",
+          "relative rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400",
           isSelected 
             ? "border-blue-500 bg-blue-500/10" 
             : "border-border hover:border-blue-300",
