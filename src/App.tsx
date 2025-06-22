@@ -14,7 +14,7 @@ import { AppState, AppSettings, AnimationFrame, FlipDotState } from '@/types';
 import {defaultFrames} from './defaults.ts'
 
 const defaultSettings: AppSettings = {
-  gridDimensions: { rows: 6, columns: 6 },
+  gridDimensions: { rows: 4, columns: 4 },
   colors: {
     background: '#1a1a1a',
     activeDot: '#22c55e',
