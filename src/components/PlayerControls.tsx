@@ -74,155 +74,161 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
     <TooltipProvider>
       <Card className="mt-6">
         <CardContent className="p-4">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-1">
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+            <div className="flex flex-wrap items-center gap-2 min-w-0">
               {/* Playback Controls */}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={onPreviousFrame}
-                    disabled={totalFrames === 0}
-                    className="hover:bg-blue-500/10"
-                  >
-                    <SkipBack className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent className="bg-white text-black border-gray-300">
-                  <p>Previous Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-200 text-black rounded">←</kbd></p>
-                </TooltipContent>
-              </Tooltip>
+              <div className="flex items-center gap-1">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={onPreviousFrame}
+                      disabled={totalFrames === 0}
+                      className="hover:bg-blue-500/10"
+                    >
+                      <SkipBack className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-white text-black border-gray-300">
+                    <p>Previous Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-200 text-black rounded">←</kbd></p>
+                  </TooltipContent>
+                </Tooltip>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={onPlayPause}
-                    disabled={totalFrames === 0}
-                    className="hover:bg-green-500/10"
-                  >
-                    {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent className="bg-white text-black border-gray-300">
-                  <p>{isPlaying ? 'Pause Animation' : 'Play Animation'} <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-200 text-black rounded">Space</kbd></p>
-                </TooltipContent>
-              </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={onPlayPause}
+                      disabled={totalFrames === 0}
+                      className="hover:bg-green-500/10"
+                    >
+                      {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-white text-black border-gray-300">
+                    <p>{isPlaying ? 'Pause Animation' : 'Play Animation'} <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-200 text-black rounded">Space</kbd></p>
+                  </TooltipContent>
+                </Tooltip>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={onNextFrame}
-                    disabled={totalFrames === 0}
-                    className="hover:bg-blue-500/10"
-                  >
-                    <SkipForward className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent className="bg-white text-black border-gray-300">
-                  <p>Next Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-200 text-black rounded">→</kbd></p>
-                </TooltipContent>
-              </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={onNextFrame}
+                      disabled={totalFrames === 0}
+                      className="hover:bg-blue-500/10"
+                    >
+                      <SkipForward className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-white text-black border-gray-300">
+                    <p>Next Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-200 text-black rounded">→</kbd></p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
 
               {/* Separator */}
-              <div className="w-px h-6 bg-border mx-2" />
+              <div className="w-px h-6 bg-border mx-1" />
 
               {/* Frame Management */}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={onNewFrame}
-                    className="hover:bg-emerald-500/10"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent className="bg-white text-black border-gray-300">
-                  <p>Add New Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-200 text-black rounded">Ctrl+N</kbd></p>
-                </TooltipContent>
-              </Tooltip>
+              <div className="flex items-center gap-1">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={onNewFrame}
+                      className="hover:bg-emerald-500/10"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-white text-black border-gray-300">
+                    <p>Add New Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-200 text-black rounded">Ctrl+N</kbd></p>
+                  </TooltipContent>
+                </Tooltip>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={onDeleteFrame}
-                    disabled={totalFrames <= 1}
-                    className="hover:bg-red-500/10"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent className="bg-white text-black border-gray-300">
-                  <p>Delete Current Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-200 text-black rounded">Del</kbd></p>
-                </TooltipContent>
-              </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={onDeleteFrame}
+                      disabled={totalFrames <= 1}
+                      className="hover:bg-red-500/10"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-white text-black border-gray-300">
+                    <p>Delete Current Frame <kbd className="ml-2 px-1 py-0.5 text-xs bg-gray-200 text-black rounded">Del</kbd></p>
+                  </TooltipContent>
+                </Tooltip>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={onClearFrame}
-                    disabled={totalFrames === 0}
-                    className="hover:bg-orange-500/10"
-                  >
-                    <Eraser className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent className="bg-white text-black border-gray-300">
-                  <p>Clear Current Frame</p>
-                </TooltipContent>
-              </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={onClearFrame}
+                      disabled={totalFrames === 0}
+                      className="hover:bg-orange-500/10"
+                    >
+                      <Eraser className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-white text-black border-gray-300">
+                    <p>Clear Current Frame</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
 
               {/* Separator */}
-              <div className="w-px h-6 bg-border mx-2" />
+              <div className="w-px h-6 bg-border mx-1" />
 
               {/* Frame Movement */}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={onMoveFramePrevious}
-                    disabled={currentFrame === 0 || totalFrames <= 1}
-                    className="hover:bg-purple-500/10"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent className="bg-white text-black border-gray-300">
-                  <p>Move Frame Left</p>
-                </TooltipContent>
-              </Tooltip>
+              <div className="flex items-center gap-1">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={onMoveFramePrevious}
+                      disabled={currentFrame === 0 || totalFrames <= 1}
+                      className="hover:bg-purple-500/10"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-white text-black border-gray-300">
+                    <p>Move Frame Left</p>
+                  </TooltipContent>
+                </Tooltip>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={onMoveFrameNext}
-                    disabled={currentFrame === totalFrames - 1 || totalFrames <= 1}
-                    className="hover:bg-purple-500/10"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent className="bg-white text-black border-gray-300">
-                  <p>Move Frame Right</p>
-                </TooltipContent>
-              </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={onMoveFrameNext}
+                      disabled={currentFrame === totalFrames - 1 || totalFrames <= 1}
+                      className="hover:bg-purple-500/10"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-white text-black border-gray-300">
+                    <p>Move Frame Right</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
             </div>
 
             {/* Export Controls */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 flex-shrink-0">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className="relative group">
