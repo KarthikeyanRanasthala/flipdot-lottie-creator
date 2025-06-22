@@ -3,12 +3,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { RotateCcw } from 'lucide-react';
 import { AppSettings } from '@/types';
 
 interface PropertiesPanelProps {
   settings: AppSettings;
   onSettingsChange: (settings: AppSettings) => void;
 }
+
+const defaultColors = {
+  background: '#1a1a1a',
+  activeDot: '#22c55e',
+  inactiveDot: '#374151'
+};
 
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   settings,
@@ -63,6 +71,13 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         ...settings.colors,
         [colorType]: color
       }
+    });
+  };
+
+  const handleResetColors = () => {
+    onSettingsChange({
+      ...settings,
+      colors: { ...defaultColors }
     });
   };
 
@@ -145,7 +160,18 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Colors</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg">Colors</CardTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleResetColors}
+              className="hover:bg-blue-500/10"
+            >
+              <RotateCcw className="h-4 w-4 mr-2" />
+              Reset
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 gap-4">
