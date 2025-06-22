@@ -266,8 +266,8 @@ export function exportToLottie(
     st: 0
   };
 
-  // Add background as the first layer (bottom)
-  layers.unshift(backgroundLayer);
+  // Push background to the end of layers (top layer)
+  layers.push(backgroundLayer);
 
   const lottieAnimation: LottieAnimation = {
     v: "5.7.4",
