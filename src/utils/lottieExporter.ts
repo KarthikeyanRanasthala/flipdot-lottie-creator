@@ -1,14 +1,14 @@
 import { AnimationFrame, GridDimensions, ColorSettings } from '@/types';
 
 interface LottieAnimation {
-  v: string; // version
-  fr: number; // frame rate
-  ip: number; // in point
-  op: number; // out point
-  w: number; // width
-  h: number; // height
-  nm: string; // name
-  ddd: number; // 3d flag
+  v: string;
+  fr: number;
+  ip: number;
+  op: number;
+  w: number;
+  h: number;
+  nm: string;
+  ddd: number;
   assets: any[];
   layers: LottieLayer[];
 }
@@ -16,16 +16,10 @@ interface LottieAnimation {
 interface LottieLayer {
   ddd: number;
   ind: number;
-  ty: number; // layer type (4 = shape layer)
+  ty: number;
   nm: string;
   sr: number;
-  ks: {
-    o: { a: number; k: number }; // opacity
-    r: { a: number; k: number }; // rotation
-    p: { a: number; k: number[] }; // position
-    a: { a: number; k: number[] }; // anchor
-    s: { a: number; k: number[] }; // scale
-  };
+  ks: LottieTransform;
   ao: number;
   shapes: LottieShape[];
   ip: number;
@@ -33,9 +27,22 @@ interface LottieLayer {
   st: number;
 }
 
+interface LottieTransform {
+  o: LottieProperty; // opacity
+  r: LottieProperty; // rotation
+  p: LottieProperty; // position
+  a: LottieProperty; // anchor
+  s: LottieProperty; // scale
+}
+
+interface LottieProperty {
+  a: number;
+  k: number | number[] | LottieKeyframe[];
+}
+
 interface LottieShape {
-  ty: string; // shape type
-  nm: string; // name
+  ty: string;
+  nm: string;
   it: LottieShapeItem[];
 }
 
@@ -43,32 +50,17 @@ interface LottieShapeItem {
   ty: string;
   nm?: string;
   d?: number;
-  s?: {
-    a: number;
-    k: number[];
-  };
-  p?: {
-    a: number;
-    k: number[];
-  };
-  r?: {
-    a: number;
-    k: number;
-  };
-  c?: {
-    a: number;
-    k: LottieColorKeyframe[] | number[];
-  };
-  o?: {
-    a: number;
-    k: number;
-  };
+  s?: LottieProperty;
+  p?: LottieProperty;
+  r?: LottieProperty;
+  c?: LottieProperty;
+  o?: LottieProperty;
   lc?: number;
   lj?: number;
   ml?: number;
 }
 
-interface LottieColorKeyframe {
+interface LottieKeyframe {
   i: {
     x: number[];
     y: number[];
@@ -79,17 +71,19 @@ interface LottieColorKeyframe {
   };
   t: number;
   s: number[];
+  e?: number[];
 }
 
 // Convert hex color to RGB array (0-1 range)
 function hexToRgb(hex: string): number[] {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  if (!result) return [0, 0, 0];
+  if (!result) return [0, 0, 0, 1];
   
   return [
     parseInt(result[1], 16) / 255,
     parseInt(result[2], 16) / 255,
-    parseInt(result[3], 16) / 255
+    parseInt(result[3], 16) / 255,
+    1
   ];
 }
 
@@ -103,13 +97,16 @@ export function exportToLottie(
     throw new Error('No frames to export');
   }
 
-  const frameRate = Math.max(1, Math.min(60, 1000 / frameDuration)); // Clamp between 1-60 fps
-  const totalFrames = frames.length;
+  // Calculate timing
+  const frameRate = 30; // Standard frame rate for smooth animation
+  const durationPerFrame = frameDuration / 1000; // Convert to seconds
+  const totalDuration = frames.length * durationPerFrame;
+  const totalFrames = Math.ceil(totalDuration * frameRate);
   
-  // Calculate canvas dimensions based on grid
-  const dotSize = 20;
-  const gap = 4;
-  const padding = 20;
+  // Calculate canvas dimensions
+  const dotSize = 40;
+  const gap = 8;
+  const padding = 40;
   const canvasWidth = dimensions.columns * dotSize + (dimensions.columns - 1) * gap + padding * 2;
   const canvasHeight = dimensions.rows * dotSize + (dimensions.rows - 1) * gap + padding * 2;
 
@@ -117,78 +114,91 @@ export function exportToLottie(
   const activeColor = hexToRgb(colors.activeDot);
   const inactiveColor = hexToRgb(colors.inactiveDot);
 
-  // Create a layer for each dot position
+  // Create a layer for each dot
   for (let row = 0; row < dimensions.rows; row++) {
     for (let col = 0; col < dimensions.columns; col++) {
       const dotX = padding + col * (dotSize + gap) + dotSize / 2;
       const dotY = padding + row * (dotSize + gap) + dotSize / 2;
       
-      // Create color keyframes for this dot based on active state across frames
-      const colorKeyframes: LottieColorKeyframe[] = [];
+      let colorProperty: LottieProperty;
       
-      if (frames.length > 1) {
-        frames.forEach((frame, frameIndex) => {
-          const isActive = frame.dots[row][col].active;
-          const frameTime = frameIndex * (frameRate / totalFrames) * totalFrames;
+      if (frames.length === 1) {
+        // Single frame - static color
+        const isActive = frames[0].dots[row][col].active;
+        colorProperty = {
+          a: 0,
+          k: isActive ? activeColor : inactiveColor
+        };
+      } else {
+        // Multiple frames - animated color
+        const colorKeyframes: LottieKeyframe[] = [];
+        
+        for (let frameIndex = 0; frameIndex < frames.length; frameIndex++) {
+          const isActive = frames[frameIndex].dots[row][col].active;
+          const frameTime = frameIndex * (totalFrames / frames.length);
           const color = isActive ? activeColor : inactiveColor;
           
+          // Add keyframe for this frame
           colorKeyframes.push({
-            i: { x: [1], y: [1] }, // Hold interpolation (no easing)
+            i: { x: [1], y: [1] }, // Hold interpolation (step function)
             o: { x: [0], y: [0] },
             t: frameTime,
-            s: [...color]
+            s: [...color],
+            e: [...color] // End value same as start for hold
           });
-        });
-
-        // Add final keyframe to complete the loop
-        const lastFrame = frames[frames.length - 1];
-        const isLastActive = lastFrame.dots[row][col].active;
-        const lastColor = isLastActive ? activeColor : inactiveColor;
+        }
         
+        // Add final keyframe to loop back to first frame
+        const firstFrameActive = frames[0].dots[row][col].active;
+        const firstColor = firstFrameActive ? activeColor : inactiveColor;
         colorKeyframes.push({
           i: { x: [1], y: [1] },
           o: { x: [0], y: [0] },
           t: totalFrames,
-          s: [...lastColor]
+          s: [...firstColor],
+          e: [...firstColor]
         });
+        
+        colorProperty = {
+          a: 1,
+          k: colorKeyframes
+        };
       }
 
       const layer: LottieLayer = {
         ddd: 0,
         ind: row * dimensions.columns + col + 1,
-        ty: 4, // shape layer
+        ty: 4, // Shape layer
         nm: `Dot_${row}_${col}`,
         sr: 1,
         ks: {
-          o: { a: 0, k: 100 }, // Always full opacity
-          r: { a: 0, k: 0 },
-          p: { a: 0, k: [dotX, dotY, 0] },
-          a: { a: 0, k: [0, 0, 0] },
-          s: { a: 0, k: [100, 100, 100] }
+          o: { a: 0, k: 100 }, // Opacity
+          r: { a: 0, k: 0 },   // Rotation
+          p: { a: 0, k: [dotX, dotY, 0] }, // Position
+          a: { a: 0, k: [0, 0, 0] },       // Anchor
+          s: { a: 0, k: [100, 100, 100] }  // Scale
         },
         ao: 0,
         shapes: [
           {
-            ty: "gr", // group
-            nm: "Ellipse",
+            ty: "gr", // Group
+            nm: "Dot",
             it: [
               {
-                ty: "el", // ellipse
+                ty: "el", // Ellipse
                 nm: "Ellipse Path",
                 d: 1,
                 s: { a: 0, k: [dotSize, dotSize] },
                 p: { a: 0, k: [0, 0] }
               },
               {
-                ty: "fl", // fill
+                ty: "fl", // Fill
                 nm: "Fill",
-                c: colorKeyframes.length > 0 
-                  ? { a: 1, k: colorKeyframes } // Animated color
-                  : { a: 0, k: frames[0].dots[row][col].active ? activeColor : inactiveColor }, // Static color
+                c: colorProperty,
                 o: { a: 0, k: 100 }
               },
               {
-                ty: "tr", // transform
+                ty: "tr", // Transform
                 nm: "Transform",
                 p: { a: 0, k: [0, 0] },
                 a: { a: 0, k: [0, 0] },
@@ -207,6 +217,60 @@ export function exportToLottie(
       layers.push(layer);
     }
   }
+
+  // Add background layer
+  const backgroundLayer: LottieLayer = {
+    ddd: 0,
+    ind: layers.length + 1,
+    ty: 4,
+    nm: "Background",
+    sr: 1,
+    ks: {
+      o: { a: 0, k: 100 },
+      r: { a: 0, k: 0 },
+      p: { a: 0, k: [canvasWidth / 2, canvasHeight / 2, 0] },
+      a: { a: 0, k: [0, 0, 0] },
+      s: { a: 0, k: [100, 100, 100] }
+    },
+    ao: 0,
+    shapes: [
+      {
+        ty: "gr",
+        nm: "Background",
+        it: [
+          {
+            ty: "rc", // Rectangle
+            nm: "Rectangle Path",
+            d: 1,
+            s: { a: 0, k: [canvasWidth, canvasHeight] },
+            p: { a: 0, k: [0, 0] },
+            r: { a: 0, k: 0 }
+          },
+          {
+            ty: "fl", // Fill
+            nm: "Fill",
+            c: { a: 0, k: hexToRgb(colors.background) },
+            o: { a: 0, k: 100 }
+          },
+          {
+            ty: "tr", // Transform
+            nm: "Transform",
+            p: { a: 0, k: [0, 0] },
+            a: { a: 0, k: [0, 0] },
+            s: { a: 0, k: [100, 100] },
+            r: { a: 0, k: 0 },
+            o: { a: 0, k: 100 }
+          }
+        ]
+      }
+    ],
+    ip: 0,
+    op: totalFrames,
+    st: 0
+  };
+
+  // Add background as the first layer (bottom)
+  layers.unshift(backgroundLayer);
 
   const lottieAnimation: LottieAnimation = {
     v: "5.7.4",
