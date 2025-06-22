@@ -119,6 +119,20 @@ function App() {
     setIsPlaying(false);
   }, [frames.length, settings.gridDimensions]);
 
+  const handleDeleteFrame = useCallback(() => {
+    if (frames.length <= 1) return; // Don't delete if it's the last frame
+
+    const newFrames = frames.filter((_, index) => index !== currentFrameIndex);
+    setFrames(newFrames);
+    
+    // Adjust current frame index
+    if (currentFrameIndex >= newFrames.length) {
+      setCurrentFrameIndex(newFrames.length - 1);
+    }
+    
+    setIsPlaying(false);
+  }, [frames, currentFrameIndex]);
+
   const handleClearFrame = useCallback(() => {
     if (frames.length === 0) return;
 
@@ -132,6 +146,38 @@ function App() {
     };
     setFrames(newFrames);
   }, [frames, currentFrameIndex, settings.gridDimensions]);
+
+  const handleMoveFramePrevious = useCallback(() => {
+    if (currentFrameIndex === 0 || frames.length <= 1) return;
+
+    const newFrames = [...frames];
+    const currentFrame = newFrames[currentFrameIndex];
+    const previousFrame = newFrames[currentFrameIndex - 1];
+    
+    // Swap frames
+    newFrames[currentFrameIndex] = previousFrame;
+    newFrames[currentFrameIndex - 1] = currentFrame;
+    
+    setFrames(newFrames);
+    setCurrentFrameIndex(currentFrameIndex - 1);
+    setIsPlaying(false);
+  }, [frames, currentFrameIndex]);
+
+  const handleMoveFrameNext = useCallback(() => {
+    if (currentFrameIndex === frames.length - 1 || frames.length <= 1) return;
+
+    const newFrames = [...frames];
+    const currentFrame = newFrames[currentFrameIndex];
+    const nextFrame = newFrames[currentFrameIndex + 1];
+    
+    // Swap frames
+    newFrames[currentFrameIndex] = nextFrame;
+    newFrames[currentFrameIndex + 1] = currentFrame;
+    
+    setFrames(newFrames);
+    setCurrentFrameIndex(currentFrameIndex + 1);
+    setIsPlaying(false);
+  }, [frames, currentFrameIndex]);
 
   const handleFrameSelect = useCallback((frameIndex: number) => {
     setCurrentFrameIndex(frameIndex);
@@ -176,7 +222,10 @@ function App() {
               onPreviousFrame={handlePreviousFrame}
               onNextFrame={handleNextFrame}
               onNewFrame={handleNewFrame}
+              onDeleteFrame={handleDeleteFrame}
               onClearFrame={handleClearFrame}
+              onMoveFramePrevious={handleMoveFramePrevious}
+              onMoveFrameNext={handleMoveFrameNext}
               onFrameSelect={handleFrameSelect}
             />
           </div>
