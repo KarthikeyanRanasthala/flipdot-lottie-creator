@@ -20,7 +20,8 @@ const defaultSettings: AppSettings = {
     activeDot: '#22c55e',
     inactiveDot: '#374151'
   },
-  frameDuration: 500
+  frameDuration: 500,
+  includeBackground: true
 };
 
 function App() {
@@ -292,6 +293,7 @@ function App() {
               dimensions={settings.gridDimensions}
               colors={settings.colors}
               frameDuration={settings.frameDuration}
+              includeBackground={settings.includeBackground}
               onPlayPause={handlePlayPause}
               onPreviousFrame={handlePreviousFrame}
               onNextFrame={handleNextFrame}

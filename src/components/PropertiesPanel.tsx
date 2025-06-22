@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { RotateCcw } from 'lucide-react';
 import { AppSettings } from '@/types';
 
@@ -71,6 +72,13 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         ...settings.colors,
         [colorType]: color
       }
+    });
+  };
+
+  const handleBackgroundToggle = (checked: boolean) => {
+    onSettingsChange({
+      ...settings,
+      includeBackground: checked
     });
   };
 
@@ -176,14 +184,27 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 gap-4">
             <div>
-              <Label htmlFor="background-color">Background</Label>
-              <div className="flex items-center space-x-2 mt-1">
+              <div className="flex items-center justify-between mb-2">
+                <Label htmlFor="background-color">Background</Label>
+                <div className="flex items-center space-x-2">
+                  <Label htmlFor="include-background" className="text-sm text-muted-foreground">
+                    Include in export
+                  </Label>
+                  <Switch
+                    id="include-background"
+                    checked={settings.includeBackground}
+                    onCheckedChange={handleBackgroundToggle}
+                  />
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
                 <input
                   id="background-color"
                   type="color"
                   value={settings.colors.background}
                   onChange={(e) => handleColorChange('background', e.target.value)}
                   className="w-10 h-10 rounded border cursor-pointer"
+                  disabled={!settings.includeBackground}
                 />
                 <Badge variant="outline" className="font-mono text-xs">
                   {settings.colors.background}

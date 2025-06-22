@@ -23,6 +23,7 @@ export interface AppSettings {
   gridDimensions: GridDimensions;
   colors: ColorSettings;
   frameDuration: number;
+  includeBackground: boolean;
 }
 
 export interface AppState {

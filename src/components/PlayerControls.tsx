@@ -28,6 +28,7 @@ interface PlayerControlsProps {
   dimensions: GridDimensions;
   colors: ColorSettings;
   frameDuration: number;
+  includeBackground: boolean;
   onPlayPause: () => void;
   onPreviousFrame: () => void;
   onNextFrame: () => void;
@@ -47,6 +48,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
   dimensions,
   colors,
   frameDuration,
+  includeBackground,
   onPlayPause,
   onPreviousFrame,
   onNextFrame,
@@ -59,7 +61,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
 }) => {
   const handleDownloadLottie = () => {
     try {
-      const lottieJson = exportToLottie(frames, dimensions, colors, frameDuration);
+      const lottieJson = exportToLottie(frames, dimensions, colors, frameDuration, includeBackground);
       const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
       downloadLottieFile(lottieJson, `flipdot-animation-${timestamp}.json`);
     } catch (error) {

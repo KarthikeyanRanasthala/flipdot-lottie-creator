@@ -91,7 +91,8 @@ export function exportToLottie(
   frames: AnimationFrame[],
   dimensions: GridDimensions,
   colors: ColorSettings,
-  frameDuration: number
+  frameDuration: number,
+  includeBackground: boolean = true
 ): string {
   if (frames.length === 0) {
     throw new Error('No frames to export');
@@ -215,59 +216,61 @@ export function exportToLottie(
     }
   }
 
-  // Add background layer
-  const backgroundLayer: LottieLayer = {
-    ddd: 0,
-    ind: layers.length + 1,
-    ty: 4,
-    nm: "Background",
-    sr: 1,
-    ks: {
-      o: { a: 0, k: 100 },
-      r: { a: 0, k: 0 },
-      p: { a: 0, k: [canvasWidth / 2, canvasHeight / 2, 0] },
-      a: { a: 0, k: [0, 0, 0] },
-      s: { a: 0, k: [100, 100, 100] }
-    },
-    ao: 0,
-    shapes: [
-      {
-        ty: "gr",
-        nm: "Background",
-        it: [
-          {
-            ty: "rc", // Rectangle
-            nm: "Rectangle Path",
-            d: 1,
-            s: { a: 0, k: [canvasWidth, canvasHeight] },
-            p: { a: 0, k: [0, 0] },
-            r: { a: 0, k: 0 }
-          },
-          {
-            ty: "fl", // Fill
-            nm: "Fill",
-            c: { a: 0, k: hexToRgb(colors.background) },
-            o: { a: 0, k: 100 }
-          },
-          {
-            ty: "tr", // Transform
-            nm: "Transform",
-            p: { a: 0, k: [0, 0] },
-            a: { a: 0, k: [0, 0] },
-            s: { a: 0, k: [100, 100] },
-            r: { a: 0, k: 0 },
-            o: { a: 0, k: 100 }
-          }
-        ]
-      }
-    ],
-    ip: 0,
-    op: totalFrames,
-    st: 0
-  };
+  // Add background layer only if includeBackground is true
+  if (includeBackground) {
+    const backgroundLayer: LottieLayer = {
+      ddd: 0,
+      ind: layers.length + 1,
+      ty: 4,
+      nm: "Background",
+      sr: 1,
+      ks: {
+        o: { a: 0, k: 100 },
+        r: { a: 0, k: 0 },
+        p: { a: 0, k: [canvasWidth / 2, canvasHeight / 2, 0] },
+        a: { a: 0, k: [0, 0, 0] },
+        s: { a: 0, k: [100, 100, 100] }
+      },
+      ao: 0,
+      shapes: [
+        {
+          ty: "gr",
+          nm: "Background",
+          it: [
+            {
+              ty: "rc", // Rectangle
+              nm: "Rectangle Path",
+              d: 1,
+              s: { a: 0, k: [canvasWidth, canvasHeight] },
+              p: { a: 0, k: [0, 0] },
+              r: { a: 0, k: 0 }
+            },
+            {
+              ty: "fl", // Fill
+              nm: "Fill",
+              c: { a: 0, k: hexToRgb(colors.background) },
+              o: { a: 0, k: 100 }
+            },
+            {
+              ty: "tr", // Transform
+              nm: "Transform",
+              p: { a: 0, k: [0, 0] },
+              a: { a: 0, k: [0, 0] },
+              s: { a: 0, k: [100, 100] },
+              r: { a: 0, k: 0 },
+              o: { a: 0, k: 100 }
+            }
+          ]
+        }
+      ],
+      ip: 0,
+      op: totalFrames,
+      st: 0
+    };
 
-  // Push background to the end of layers (top layer)
-  layers.push(backgroundLayer);
+    // Push background to the end of layers (top layer)
+    layers.push(backgroundLayer);
+  }
 
   const lottieAnimation: LottieAnimation = {
     v: "5.7.4",
