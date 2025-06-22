@@ -188,7 +188,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 <Label htmlFor="background-color">Background</Label>
                 <div className="flex items-center space-x-2">
                   <Label htmlFor="include-background" className="text-sm text-muted-foreground">
-                    Include in export
+                    Include in download
                   </Label>
                   <Switch
                     id="include-background"
@@ -204,7 +204,6 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                   value={settings.colors.background}
                   onChange={(e) => handleColorChange('background', e.target.value)}
                   className="w-10 h-10 rounded border cursor-pointer"
-                  disabled={!settings.includeBackground}
                 />
                 <Badge variant="outline" className="font-mono text-xs">
                   {settings.colors.background}
