@@ -3,16 +3,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
 import { AppSettings } from '@/types';
 
 interface PropertiesPanelProps {
   settings: AppSettings;
+  showBackground: boolean;
   onSettingsChange: (settings: AppSettings) => void;
+  onShowBackgroundChange: (show: boolean) => void;
 }
 
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   settings,
-  onSettingsChange
+  showBackground,
+  onSettingsChange,
+  onShowBackgroundChange
 }) => {
   const [tempDuration, setTempDuration] = useState(settings.frameDuration.toString());
   const [tempRows, setTempRows] = useState(settings.gridDimensions.rows.toString());
@@ -139,6 +144,22 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 className="mt-1 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
               />
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Display Options</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="show-background">Show Background</Label>
+            <Switch
+              id="show-background"
+              checked={showBackground}
+              onCheckedChange={onShowBackgroundChange}
+            />
           </div>
         </CardContent>
       </Card>

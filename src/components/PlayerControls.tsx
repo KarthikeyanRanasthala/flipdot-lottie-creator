@@ -20,6 +20,7 @@ interface PlayerControlsProps {
   frames: AnimationFrame[];
   dimensions: GridDimensions;
   colors: ColorSettings;
+  showBackground: boolean;
   onPlayPause: () => void;
   onPreviousFrame: () => void;
   onNextFrame: () => void;
@@ -35,6 +36,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
   frames,
   dimensions,
   colors,
+  showBackground,
   onPlayPause,
   onPreviousFrame,
   onNextFrame,
@@ -109,6 +111,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                     isPlaying={isPlaying}
                     frameNumber={index + 1}
                     onClick={() => onFrameSelect(index)}
+                    showBackground={showBackground}
                     className="flex-shrink-0"
                   />
                 ))}
