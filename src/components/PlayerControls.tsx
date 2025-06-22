@@ -223,16 +223,22 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
             <div className="flex items-center gap-1">
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleDownloadLottie}
-                    disabled={totalFrames === 0}
-                    className="hover:bg-cyan-500/10"
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    Download as Lottie
-                  </Button>
+                  <div className="relative group">
+                    {/* Rotating gradient border */}
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 via-purple-500 via-blue-500 via-cyan-500 to-pink-500 rounded-lg opacity-75 group-hover:opacity-100 blur-sm group-hover:blur-none transition-all duration-300 animate-gradient-rotate"></div>
+                    
+                    {/* Button */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleDownloadLottie}
+                      disabled={totalFrames === 0}
+                      className="relative bg-background border-0 hover:bg-background/90 transition-all duration-300 group-hover:scale-105"
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Download as Lottie
+                    </Button>
+                  </div>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Export animation as Lottie JSON file</p>

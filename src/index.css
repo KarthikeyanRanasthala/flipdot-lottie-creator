@@ -81,6 +81,33 @@
   animation: dot-pulse 2s infinite;
 }
 
+/* Rotating gradient animation for download button */
+@keyframes gradient-rotate {
+  0% {
+    background-position: 0% 50%;
+    transform: rotate(0deg);
+  }
+  25% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+    transform: rotate(180deg);
+  }
+  75% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+    transform: rotate(360deg);
+  }
+}
+
+.animate-gradient-rotate {
+  background-size: 400% 400%;
+  animation: gradient-rotate 3s ease-in-out infinite;
+}
+
 /* Responsive design improvements */
 @media (max-width: 1024px) {
   .grid-cols-1.lg\\:grid-cols-3 {
