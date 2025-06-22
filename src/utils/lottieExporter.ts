@@ -45,11 +45,11 @@ interface LottieShapeItem {
   d?: number;
   s?: {
     a: number;
-    k: LottieKeyframe[];
+    k: number[];
   };
   p?: {
     a: number;
-    k: LottieKeyframe[];
+    k: number[];
   };
   r?: {
     a: number;
@@ -57,7 +57,7 @@ interface LottieShapeItem {
   };
   c?: {
     a: number;
-    k: number[];
+    k: LottieColorKeyframe[] | number[];
   };
   o?: {
     a: number;
@@ -68,7 +68,7 @@ interface LottieShapeItem {
   ml?: number;
 }
 
-interface LottieKeyframe {
+interface LottieColorKeyframe {
   i: {
     x: number[];
     y: number[];
@@ -103,7 +103,7 @@ export function exportToLottie(
     throw new Error('No frames to export');
   }
 
-  const frameRate = 1000 / frameDuration; // Convert ms to fps
+  const frameRate = Math.max(1, Math.min(60, 1000 / frameDuration)); // Clamp between 1-60 fps
   const totalFrames = frames.length;
   
   // Calculate canvas dimensions based on grid
@@ -114,6 +114,8 @@ export function exportToLottie(
   const canvasHeight = dimensions.rows * dotSize + (dimensions.rows - 1) * gap + padding * 2;
 
   const layers: LottieLayer[] = [];
+  const activeColor = hexToRgb(colors.activeDot);
+  const inactiveColor = hexToRgb(colors.inactiveDot);
 
   // Create a layer for each dot position
   for (let row = 0; row < dimensions.rows; row++) {
@@ -121,29 +123,33 @@ export function exportToLottie(
       const dotX = padding + col * (dotSize + gap) + dotSize / 2;
       const dotY = padding + row * (dotSize + gap) + dotSize / 2;
       
-      // Create keyframes for this dot's opacity based on active state across frames
-      const opacityKeyframes: LottieKeyframe[] = [];
+      // Create color keyframes for this dot based on active state across frames
+      const colorKeyframes: LottieColorKeyframe[] = [];
       
-      frames.forEach((frame, frameIndex) => {
-        const isActive = frame.dots[row][col].active;
-        const frameTime = frameIndex * (frameRate / totalFrames) * totalFrames;
-        
-        opacityKeyframes.push({
-          i: { x: [0.833], y: [0.833] },
-          o: { x: [0.167], y: [0.167] },
-          t: frameTime,
-          s: [isActive ? 100 : 0]
+      if (frames.length > 1) {
+        frames.forEach((frame, frameIndex) => {
+          const isActive = frame.dots[row][col].active;
+          const frameTime = frameIndex * (frameRate / totalFrames) * totalFrames;
+          const color = isActive ? activeColor : inactiveColor;
+          
+          colorKeyframes.push({
+            i: { x: [1], y: [1] }, // Hold interpolation (no easing)
+            o: { x: [0], y: [0] },
+            t: frameTime,
+            s: [...color]
+          });
         });
-      });
 
-      // Add final keyframe
-      if (opacityKeyframes.length > 0) {
-        const lastFrame = opacityKeyframes[opacityKeyframes.length - 1];
-        opacityKeyframes.push({
-          i: { x: [0.833], y: [0.833] },
-          o: { x: [0.167], y: [0.167] },
+        // Add final keyframe to complete the loop
+        const lastFrame = frames[frames.length - 1];
+        const isLastActive = lastFrame.dots[row][col].active;
+        const lastColor = isLastActive ? activeColor : inactiveColor;
+        
+        colorKeyframes.push({
+          i: { x: [1], y: [1] },
+          o: { x: [0], y: [0] },
           t: totalFrames,
-          s: lastFrame.s
+          s: [...lastColor]
         });
       }
 
@@ -154,7 +160,7 @@ export function exportToLottie(
         nm: `Dot_${row}_${col}`,
         sr: 1,
         ks: {
-          o: { a: 1, k: opacityKeyframes.length > 1 ? 100 : (frames[0].dots[row][col].active ? 100 : 0) },
+          o: { a: 0, k: 100 }, // Always full opacity
           r: { a: 0, k: 0 },
           p: { a: 0, k: [dotX, dotY, 0] },
           a: { a: 0, k: [0, 0, 0] },
@@ -176,7 +182,9 @@ export function exportToLottie(
               {
                 ty: "fl", // fill
                 nm: "Fill",
-                c: { a: 0, k: hexToRgb(colors.activeDot) },
+                c: colorKeyframes.length > 0 
+                  ? { a: 1, k: colorKeyframes } // Animated color
+                  : { a: 0, k: frames[0].dots[row][col].active ? activeColor : inactiveColor }, // Static color
                 o: { a: 0, k: 100 }
               },
               {
@@ -195,14 +203,6 @@ export function exportToLottie(
         op: totalFrames,
         st: 0
       };
-
-      // Add animated opacity if there are multiple frames
-      if (opacityKeyframes.length > 1) {
-        layer.ks.o = {
-          a: 1,
-          k: opacityKeyframes
-        };
-      }
 
       layers.push(layer);
     }
