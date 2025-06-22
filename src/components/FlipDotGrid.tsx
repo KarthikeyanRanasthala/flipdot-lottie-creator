@@ -20,7 +20,10 @@ export const FlipDotGrid: React.FC<FlipDotGridProps> = ({
   // Calculate the appropriate size for the grid container
   const maxSize = 500;
   const padding = 48; // 6 * 8px (p-6 = 1.5rem = 24px on each side)
-  const availableSize = maxSize - padding;
+  
+  // For mobile, use screen width with padding
+  const mobileHorizontalPadding = 32; // 16px on each side for mobile
+  const availableSize = Math.min(maxSize - padding, window.innerWidth - mobileHorizontalPadding - padding);
   
   // Calculate gap size based on grid dimensions (smaller grids get larger gaps)
   const baseGap = Math.max(4, Math.min(12, Math.floor(availableSize / (Math.max(dimensions.rows, dimensions.columns) * 8))));
@@ -36,8 +39,8 @@ export const FlipDotGrid: React.FC<FlipDotGridProps> = ({
     gap: `${baseGap}px`,
     width: 'fit-content',
     height: 'fit-content',
-    maxWidth: `${maxSize}px`,
-    maxHeight: `${maxSize}px`,
+    maxWidth: `${Math.min(maxSize, window.innerWidth - mobileHorizontalPadding)}px`,
+    maxHeight: `${Math.min(maxSize, window.innerWidth - mobileHorizontalPadding)}px`,
   };
 
   return (
