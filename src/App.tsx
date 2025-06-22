@@ -11,6 +11,7 @@ import {
   clearDots 
 } from '@/utils/animationUtils';
 import { AppState, AppSettings, AnimationFrame, FlipDotState } from '@/types';
+import {defaultFrames} from './defaults.ts'
 
 const defaultSettings: AppSettings = {
   gridDimensions: { rows: 6, columns: 6 },
@@ -24,7 +25,7 @@ const defaultSettings: AppSettings = {
 
 function App() {
   const [settings, setSettings] = useLocalStorage<AppSettings>('flipDotSettings', defaultSettings);
-  const [frames, setFrames] = useLocalStorage<AnimationFrame[]>('flipDotFrames', []);
+  const [frames, setFrames] = useLocalStorage<AnimationFrame[]>('flipDotFrames', defaultFrames);
   const [currentFrameIndex, setCurrentFrameIndex] = useLocalStorage<number>('flipDotCurrentFrame', 0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentDots, setCurrentDots] = useState<FlipDotState[][]>(() => 
