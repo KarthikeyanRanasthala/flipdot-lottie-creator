@@ -71,7 +71,7 @@ interface LottieKeyframe {
   };
   t: number;
   s: number[];
-  e?: number[];
+  h?: number; // Hold flag for step interpolation
 }
 
 // Convert hex color to RGB array (0-1 range)
@@ -98,10 +98,11 @@ export function exportToLottie(
   }
 
   // Calculate timing
-  const frameRate = 30; // Standard frame rate for smooth animation
+  const frameRate = 30; // Standard frame rate
   const durationPerFrame = frameDuration / 1000; // Convert to seconds
   const totalDuration = frames.length * durationPerFrame;
   const totalFrames = Math.ceil(totalDuration * frameRate);
+  const framesPerStep = totalFrames / frames.length;
   
   // Calculate canvas dimensions
   const dotSize = 40;
@@ -130,34 +131,30 @@ export function exportToLottie(
           k: isActive ? activeColor : inactiveColor
         };
       } else {
-        // Multiple frames - animated color
+        // Multiple frames - animated color with hold interpolation
         const colorKeyframes: LottieKeyframe[] = [];
         
         for (let frameIndex = 0; frameIndex < frames.length; frameIndex++) {
           const isActive = frames[frameIndex].dots[row][col].active;
-          const frameTime = frameIndex * (totalFrames / frames.length);
+          const frameTime = Math.floor(frameIndex * framesPerStep);
           const color = isActive ? activeColor : inactiveColor;
           
-          // Add keyframe for this frame
-          colorKeyframes.push({
-            i: { x: [1], y: [1] }, // Hold interpolation (step function)
+          // Create keyframe with hold interpolation
+          const keyframe: LottieKeyframe = {
+            i: { x: [0], y: [0] }, // Bezier handles for hold
             o: { x: [0], y: [0] },
             t: frameTime,
             s: [...color],
-            e: [...color] // End value same as start for hold
-          });
+            h: 1 // Hold flag - this creates step interpolation
+          };
+          
+          colorKeyframes.push(keyframe);
         }
         
-        // Add final keyframe to loop back to first frame
-        const firstFrameActive = frames[0].dots[row][col].active;
-        const firstColor = firstFrameActive ? activeColor : inactiveColor;
-        colorKeyframes.push({
-          i: { x: [1], y: [1] },
-          o: { x: [0], y: [0] },
-          t: totalFrames,
-          s: [...firstColor],
-          e: [...firstColor]
-        });
+        // Remove hold flag from the last keyframe to prevent issues
+        if (colorKeyframes.length > 0) {
+          delete colorKeyframes[colorKeyframes.length - 1].h;
+        }
         
         colorProperty = {
           a: 1,
