@@ -268,9 +268,6 @@ function App() {
       <div className="max-w-7xl mx-auto">
         <header className="mb-6">
           <h1 className="text-3xl font-bold mb-2">Flip Dots Lottie Creator</h1>
-          <p className="text-muted-foreground">
-            Create stunning flip dot animations with interactive controls
-          </p>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
