@@ -23,42 +23,65 @@ const defaultSettings: AppSettings = {
 
 function App() {
   const [settings, setSettings] = useLocalStorage<AppSettings>('flipDotSettings', defaultSettings);
-  const [frames, setFrames] = useState<AnimationFrame[]>([]);
-  const [currentFrameIndex, setCurrentFrameIndex] = useState(0);
+  const [frames, setFrames] = useLocalStorage<AnimationFrame[]>('flipDotFrames', []);
+  const [currentFrameIndex, setCurrentFrameIndex] = useLocalStorage<number>('flipDotCurrentFrame', 0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentDots, setCurrentDots] = useState<FlipDotState[][]>(() => 
     createEmptyDots(settings.gridDimensions)
   );
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Initialize first frame if frames are empty
+  // Initialize frames if empty or restore from localStorage
   useEffect(() => {
-    if (frames.length === 0) {
-      const initialFrame = createAnimationFrame(createEmptyDots(settings.gridDimensions));
-      setFrames([initialFrame]);
-      setCurrentDots(initialFrame.dots);
+    if (!isInitialized) {
+      if (frames.length === 0) {
+        const initialFrame = createAnimationFrame(createEmptyDots(settings.gridDimensions));
+        setFrames([initialFrame]);
+        setCurrentFrameIndex(0);
+        setCurrentDots(initialFrame.dots);
+      } else {
+        // Restore state from localStorage
+        const validFrameIndex = Math.min(currentFrameIndex, frames.length - 1);
+        setCurrentFrameIndex(validFrameIndex);
+        
+        // Ensure frames match current grid dimensions
+        const updatedFrames = frames.map(frame => ({
+          ...frame,
+          dots: resizeDots(frame.dots, settings.gridDimensions)
+        }));
+        
+        if (JSON.stringify(updatedFrames) !== JSON.stringify(frames)) {
+          setFrames(updatedFrames);
+        }
+        
+        setCurrentDots(updatedFrames[validFrameIndex].dots);
+      }
+      setIsInitialized(true);
     }
-  }, [frames.length, settings.gridDimensions]);
+  }, [frames, currentFrameIndex, settings.gridDimensions, isInitialized, setFrames, setCurrentFrameIndex]);
 
   // Update current dots when frame changes
   useEffect(() => {
-    if (frames.length > 0 && currentFrameIndex < frames.length) {
+    if (isInitialized && frames.length > 0 && currentFrameIndex < frames.length) {
       setCurrentDots(frames[currentFrameIndex].dots);
     }
-  }, [currentFrameIndex, frames]);
+  }, [currentFrameIndex, frames, isInitialized]);
 
   // Handle grid dimension changes
   useEffect(() => {
-    if (frames.length > 0) {
+    if (isInitialized && frames.length > 0) {
       const newFrames = frames.map(frame => ({
         ...frame,
         dots: resizeDots(frame.dots, settings.gridDimensions)
       }));
-      setFrames(newFrames);
-      setCurrentDots(resizeDots(currentDots, settings.gridDimensions));
-    } else {
-      setCurrentDots(createEmptyDots(settings.gridDimensions));
+      
+      // Only update if there's actually a change
+      if (JSON.stringify(newFrames) !== JSON.stringify(frames)) {
+        setFrames(newFrames);
+        setCurrentDots(resizeDots(currentDots, settings.gridDimensions));
+      }
     }
-  }, [settings.gridDimensions]);
+  }, [settings.gridDimensions, isInitialized]);
 
   // Animation playback
   useEffect(() => {
@@ -69,7 +92,7 @@ function App() {
     }, settings.frameDuration);
 
     return () => clearInterval(interval);
-  }, [isPlaying, frames.length, settings.frameDuration]);
+  }, [isPlaying, frames.length, settings.frameDuration, setCurrentFrameIndex]);
 
   const handleDotClick = useCallback((row: number, col: number) => {
     if (frames.length === 0) return;
@@ -92,7 +115,7 @@ function App() {
       dots: newDots
     };
     setFrames(newFrames);
-  }, [currentDots, frames, currentFrameIndex]);
+  }, [currentDots, frames, currentFrameIndex, setFrames]);
 
   const handlePlayPause = useCallback(() => {
     setIsPlaying(prev => !prev);
@@ -100,17 +123,19 @@ function App() {
 
   const handlePreviousFrame = useCallback(() => {
     if (frames.length > 0) {
-      setCurrentFrameIndex(prev => prev > 0 ? prev - 1 : frames.length - 1);
+      const newIndex = currentFrameIndex > 0 ? currentFrameIndex - 1 : frames.length - 1;
+      setCurrentFrameIndex(newIndex);
       setIsPlaying(false);
     }
-  }, [frames.length]);
+  }, [frames.length, currentFrameIndex, setCurrentFrameIndex]);
 
   const handleNextFrame = useCallback(() => {
     if (frames.length > 0) {
-      setCurrentFrameIndex(prev => (prev + 1) % frames.length);
+      const newIndex = (currentFrameIndex + 1) % frames.length;
+      setCurrentFrameIndex(newIndex);
       setIsPlaying(false);
     }
-  }, [frames.length]);
+  }, [frames.length, currentFrameIndex, setCurrentFrameIndex]);
 
   const handleNewFrame = useCallback(() => {
     const newFrame = createAnimationFrame(createEmptyDots(settings.gridDimensions));
@@ -123,7 +148,7 @@ function App() {
     setFrames(newFrames);
     setCurrentFrameIndex(insertIndex);
     setIsPlaying(false);
-  }, [frames, currentFrameIndex, settings.gridDimensions]);
+  }, [frames, currentFrameIndex, settings.gridDimensions, setFrames, setCurrentFrameIndex]);
 
   const handleDeleteFrame = useCallback(() => {
     if (frames.length <= 1) return; // Don't delete if it's the last frame
@@ -132,12 +157,10 @@ function App() {
     setFrames(newFrames);
     
     // Adjust current frame index
-    if (currentFrameIndex >= newFrames.length) {
-      setCurrentFrameIndex(newFrames.length - 1);
-    }
-    
+    const newIndex = currentFrameIndex >= newFrames.length ? newFrames.length - 1 : currentFrameIndex;
+    setCurrentFrameIndex(newIndex);
     setIsPlaying(false);
-  }, [frames, currentFrameIndex]);
+  }, [frames, currentFrameIndex, setFrames, setCurrentFrameIndex]);
 
   const handleClearFrame = useCallback(() => {
     if (frames.length === 0) return;
@@ -151,7 +174,7 @@ function App() {
       dots: clearedDots
     };
     setFrames(newFrames);
-  }, [frames, currentFrameIndex, settings.gridDimensions]);
+  }, [frames, currentFrameIndex, settings.gridDimensions, setFrames]);
 
   const handleMoveFramePrevious = useCallback(() => {
     if (currentFrameIndex === 0 || frames.length <= 1) return;
@@ -167,7 +190,7 @@ function App() {
     setFrames(newFrames);
     setCurrentFrameIndex(currentFrameIndex - 1);
     setIsPlaying(false);
-  }, [frames, currentFrameIndex]);
+  }, [frames, currentFrameIndex, setFrames, setCurrentFrameIndex]);
 
   const handleMoveFrameNext = useCallback(() => {
     if (currentFrameIndex === frames.length - 1 || frames.length <= 1) return;
@@ -183,16 +206,28 @@ function App() {
     setFrames(newFrames);
     setCurrentFrameIndex(currentFrameIndex + 1);
     setIsPlaying(false);
-  }, [frames, currentFrameIndex]);
+  }, [frames, currentFrameIndex, setFrames, setCurrentFrameIndex]);
 
   const handleFrameSelect = useCallback((frameIndex: number) => {
     setCurrentFrameIndex(frameIndex);
     setIsPlaying(false);
-  }, []);
+  }, [setCurrentFrameIndex]);
 
   const handleSettingsChange = useCallback((newSettings: AppSettings) => {
     setSettings(newSettings);
   }, [setSettings]);
+
+  // Don't render until initialized to prevent flash of incorrect state
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4">
