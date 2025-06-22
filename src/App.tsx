@@ -3,7 +3,6 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { FlipDotGrid } from '@/components/FlipDotGrid';
 import { PlayerControls } from '@/components/PlayerControls';
 import { PropertiesPanel } from '@/components/PropertiesPanel';
-import { KeyboardShortcuts } from '@/components/KeyboardShortcuts';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { 
   createEmptyDots, 
@@ -32,7 +31,6 @@ function App() {
     createEmptyDots(settings.gridDimensions)
   );
   const [isInitialized, setIsInitialized] = useState(false);
-  const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
 
   // Initialize frames if empty or restore from localStorage
   useEffect(() => {
@@ -238,24 +236,18 @@ function App() {
     handlePlayPause();
   }, { enableOnFormTags: false });
 
-  useHotkeys('left, a', (e) => {
+  useHotkeys('left', (e) => {
     e.preventDefault();
     handlePreviousFrame();
   }, { enableOnFormTags: false });
 
-  useHotkeys('right, d', (e) => {
+  useHotkeys('right', (e) => {
     e.preventDefault();
     handleNextFrame();
   }, { enableOnFormTags: false });
 
-  useHotkeys('shift+/', (e) => {
-    e.preventDefault();
-    setShowKeyboardShortcuts(true);
-  }, { enableOnFormTags: false });
-
   useHotkeys('escape', (e) => {
     e.preventDefault();
-    setShowKeyboardShortcuts(false);
     setIsPlaying(false);
   }, { enableOnFormTags: false });
 
@@ -275,20 +267,10 @@ function App() {
     <div className="min-h-screen bg-background text-foreground p-4">
       <div className="max-w-7xl mx-auto">
         <header className="mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">Flip Dot Animation Studio</h1>
-              <p className="text-muted-foreground">
-                Create stunning flip dot animations with interactive controls
-              </p>
-            </div>
-            <button
-              onClick={() => setShowKeyboardShortcuts(true)}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 border border-border rounded px-2 py-1 hover:bg-accent"
-            >
-              Press <kbd className="px-1 py-0.5 text-xs bg-muted rounded">?</kbd> for shortcuts
-            </button>
-          </div>
+          <h1 className="text-3xl font-bold mb-2">Flip Dot Animation Studio</h1>
+          <p className="text-muted-foreground">
+            Create stunning flip dot animations with interactive controls
+          </p>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -333,12 +315,6 @@ function App() {
           </div>
         </div>
       </div>
-
-      {/* Keyboard Shortcuts Modal */}
-      <KeyboardShortcuts
-        isOpen={showKeyboardShortcuts}
-        onClose={() => setShowKeyboardShortcuts(false)}
-      />
     </div>
   );
 }
