@@ -114,10 +114,16 @@ function App() {
 
   const handleNewFrame = useCallback(() => {
     const newFrame = createAnimationFrame(createEmptyDots(settings.gridDimensions));
-    setFrames(prev => [...prev, newFrame]);
-    setCurrentFrameIndex(frames.length);
+    const newFrames = [...frames];
+    
+    // Insert the new frame after the current frame
+    const insertIndex = currentFrameIndex + 1;
+    newFrames.splice(insertIndex, 0, newFrame);
+    
+    setFrames(newFrames);
+    setCurrentFrameIndex(insertIndex);
     setIsPlaying(false);
-  }, [frames.length, settings.gridDimensions]);
+  }, [frames, currentFrameIndex, settings.gridDimensions]);
 
   const handleDeleteFrame = useCallback(() => {
     if (frames.length <= 1) return; // Don't delete if it's the last frame
