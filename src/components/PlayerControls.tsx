@@ -224,8 +224,8 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className="relative group">
-                    {/* Static gradient border */}
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 rounded-lg opacity-75 group-hover:opacity-100 blur-sm group-hover:blur-none transition-all duration-300"></div>
+                    {/* Static gradient border with scale effect */}
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 rounded-lg opacity-75 group-hover:opacity-100 blur-sm group-hover:blur-none transition-all duration-300 group-hover:scale-105"></div>
                     
                     {/* Button */}
                     <Button
