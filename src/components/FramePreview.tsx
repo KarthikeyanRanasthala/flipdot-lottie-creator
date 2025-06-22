@@ -10,7 +10,6 @@ interface FramePreviewProps {
   isPlaying: boolean;
   frameNumber: number;
   onClick: () => void;
-  showBackground: boolean;
   className?: string;
 }
 
@@ -22,7 +21,6 @@ export const FramePreview: React.FC<FramePreviewProps> = ({
   isPlaying,
   frameNumber,
   onClick,
-  showBackground,
   className
 }) => {
   // Calculate appropriate size for preview (much smaller than main grid)
@@ -38,7 +36,7 @@ export const FramePreview: React.FC<FramePreviewProps> = ({
   const gridStyle = {
     gridTemplateRows: `repeat(${dimensions.rows}, ${dotSize}px)`,
     gridTemplateColumns: `repeat(${dimensions.columns}, ${dotSize}px)`,
-    backgroundColor: showBackground ? colors.background : 'hsl(var(--card))',
+    backgroundColor: colors.background,
     gap: `${baseGap}px`,
     width: 'fit-content',
     height: 'fit-content',
@@ -49,10 +47,10 @@ export const FramePreview: React.FC<FramePreviewProps> = ({
       <button
         onClick={onClick}
         className={cn(
-          "relative rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400",
+          "relative rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400",
           isSelected 
-            ? "bg-blue-500/10" 
-            : "hover:bg-muted/50",
+            ? "border-blue-500 bg-blue-500/10" 
+            : "border-border hover:border-blue-300",
           isPlaying && isSelected && "ring-2 ring-blue-400 ring-opacity-50"
         )}
         style={{ width: previewSize, height: previewSize }}

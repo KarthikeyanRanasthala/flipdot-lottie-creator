@@ -23,7 +23,6 @@ const defaultSettings: AppSettings = {
 
 function App() {
   const [settings, setSettings] = useLocalStorage<AppSettings>('flipDotSettings', defaultSettings);
-  const [showBackground, setShowBackground] = useLocalStorage<boolean>('flipDotShowBackground', true);
   const [frames, setFrames] = useState<AnimationFrame[]>([]);
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -143,10 +142,6 @@ function App() {
     setSettings(newSettings);
   }, [setSettings]);
 
-  const handleShowBackgroundChange = useCallback((show: boolean) => {
-    setShowBackground(show);
-  }, [setShowBackground]);
-
   return (
     <div className="min-h-screen bg-background text-foreground p-4">
       <div className="max-w-7xl mx-auto">
@@ -177,7 +172,6 @@ function App() {
               frames={frames}
               dimensions={settings.gridDimensions}
               colors={settings.colors}
-              showBackground={showBackground}
               onPlayPause={handlePlayPause}
               onPreviousFrame={handlePreviousFrame}
               onNextFrame={handleNextFrame}
@@ -191,9 +185,7 @@ function App() {
           <div className="lg:col-span-1">
             <PropertiesPanel
               settings={settings}
-              showBackground={showBackground}
               onSettingsChange={handleSettingsChange}
-              onShowBackgroundChange={handleShowBackgroundChange}
             />
           </div>
         </div>
