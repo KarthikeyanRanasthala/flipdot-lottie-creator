@@ -98,7 +98,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
         {frames.length > 0 && (
           <div className="border-t pt-4">
             <ScrollArea className="w-full">
-              <div className="flex gap-3 pb-2">
+              <div className="flex gap-3 pb-2 flex-wrap">
                 {frames.map((frame, index) => (
                   <FramePreview
                     key={frame.id}
