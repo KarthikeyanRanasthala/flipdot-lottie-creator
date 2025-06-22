@@ -224,6 +224,7 @@ function App() {
               frames={frames}
               dimensions={settings.gridDimensions}
               colors={settings.colors}
+              frameDuration={settings.frameDuration}
               onPlayPause={handlePlayPause}
               onPreviousFrame={handlePreviousFrame}
               onNextFrame={handleNextFrame}

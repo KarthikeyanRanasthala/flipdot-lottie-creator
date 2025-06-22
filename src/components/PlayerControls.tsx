@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { FramePreview } from '@/components/FramePreview';
+import { exportToLottie, downloadLottieFile } from '@/utils/lottieExporter';
 import { 
   Play, 
   Pause, 
@@ -14,7 +15,8 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  Eraser
+  Eraser,
+  Download
 } from 'lucide-react';
 import { AnimationFrame, GridDimensions, ColorSettings } from '@/types';
 
@@ -25,6 +27,7 @@ interface PlayerControlsProps {
   frames: AnimationFrame[];
   dimensions: GridDimensions;
   colors: ColorSettings;
+  frameDuration: number;
   onPlayPause: () => void;
   onPreviousFrame: () => void;
   onNextFrame: () => void;
@@ -43,6 +46,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
   frames,
   dimensions,
   colors,
+  frameDuration,
   onPlayPause,
   onPreviousFrame,
   onNextFrame,
@@ -53,6 +57,17 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
   onMoveFrameNext,
   onFrameSelect
 }) => {
+  const handleDownloadLottie = () => {
+    try {
+      const lottieJson = exportToLottie(frames, dimensions, colors, frameDuration);
+      const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+      downloadLottieFile(lottieJson, `flipdot-animation-${timestamp}.json`);
+    } catch (error) {
+      console.error('Error exporting Lottie:', error);
+      // You could add a toast notification here
+    }
+  };
+
   return (
     <TooltipProvider>
       <Card className="mt-6">
@@ -200,6 +215,27 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Move Frame Right</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+
+            {/* Export Controls */}
+            <div className="flex items-center gap-1">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleDownloadLottie}
+                    disabled={totalFrames === 0}
+                    className="hover:bg-cyan-500/10"
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Download as Lottie
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Export animation as Lottie JSON file</p>
                 </TooltipContent>
               </Tooltip>
             </div>
