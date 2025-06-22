@@ -80,11 +80,6 @@ export const FramePreview: React.FC<FramePreviewProps> = ({
         <div className="absolute -top-2 -right-2 bg-background border rounded-full w-6 h-6 flex items-center justify-center text-xs font-medium">
           {frameNumber}
         </div>
-        
-        {/* Playing indicator */}
-        {isPlaying && isSelected && (
-          <div className="absolute top-1 left-1 w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-        )}
       </button>
     </div>
   );
