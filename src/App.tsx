@@ -267,7 +267,7 @@ function App() {
     <div className="min-h-screen bg-background text-foreground p-4">
       <div className="max-w-7xl mx-auto">
         <header className="mb-6">
-          <h1 className="text-3xl font-bold mb-2">Flip Dot Animation Studio</h1>
+          <h1 className="text-3xl font-bold mb-2">Flip Dots Lottie Creator</h1>
           <p className="text-muted-foreground">
             Create stunning flip dot animations with interactive controls
           </p>
